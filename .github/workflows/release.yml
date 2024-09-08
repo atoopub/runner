@@ -339,12 +339,12 @@ jobs:
         run: |
           cd _
           flutter build windows
-      - run: Compress-Archive build/windows/x64/runner/Release/* xs_windows.zip
+      - run: Compress-Archive _/build/windows/x64/runner/Release/* _/xs_windows.zip
 
       - name: Compile .ISS to .EXE Installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
         with:
-          path: windows/innosetup.iss
+          path: _/windows/innosetup.iss
 
       # 上传Windows至Artifacts
       - name: Upload Windows APP to Artifacts
