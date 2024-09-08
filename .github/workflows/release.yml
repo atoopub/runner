@@ -47,7 +47,7 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - run: copy _/pubspec.yaml pubspec.yaml
+      - run: cp _/pubspec.yaml pubspec.yaml
       #设置Flutter
       - name: Flutter action
         uses: subosito/flutter-action@v2
@@ -129,7 +129,7 @@ jobs:
           repository: '_'
           access-token: ${{ secrets.TOKEN }}
 
-      - run: copy _/pubspec.yaml pubspec.yaml
+      - run: cp _/pubspec.yaml pubspec.yaml
       #设置Flutter
       - name: Flutter action
         uses: subosito/flutter-action@v2
@@ -240,7 +240,7 @@ jobs:
           repository: '_'
           access-token: ${{ secrets.TOKEN }}
 
-      - run: copy _/pubspec.yaml pubspec.yaml
+      - run: cp _/pubspec.yaml pubspec.yaml
       # 设置Flutter环境
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
