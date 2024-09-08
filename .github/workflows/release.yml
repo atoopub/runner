@@ -308,11 +308,8 @@ jobs:
           owner: 'atoopub'
           repository: '_'
           access-token: ${{ secrets.TOKEN }}
-      
-      - run: |
-          cd _
-          cmd --% /c move /y * ../
 
+      - run: copy _/pubspec.yaml pubspec.yaml
       - run: choco install yq
       - name: Enable Git longpaths
         run: git config --system core.longpaths true
@@ -335,10 +332,12 @@ jobs:
         run: flutter config --enable-windows-desktop
       - name: Restore Packages
         run: |
+          cd _
           flutter pub get
       # build Windows
       - name: Build Windows
         run: |
+          cd _
           flutter build windows
       - run: Compress-Archive build/windows/x64/runner/Release/* xs_windows.zip
 
@@ -353,8 +352,8 @@ jobs:
         with:
           name: windows
           path: |
-            xs_windows.zip
-            xs_windows_installer.exe
+            _/xs_windows.zip
+            _/xs_windows_installer.exe
 
       # 读取版本信息
       - name: Read version
@@ -378,8 +377,8 @@ jobs:
           prerelease: ${{ fromJson(steps.version.outputs.content).prerelease }}
           token: ${{ secrets.TOKEN }}
           files: |
-            xs_windows.zip
-            xs_windows_installer.exe
+            _/xs_windows.zip
+            _/xs_windows_installer.exe
 
       #完成
       - run: echo "🍏 Windows job's status is ${{ job.status }}."
