@@ -19,7 +19,7 @@ jobs:
         uses: GuillaumeFalourd/clone-github-repo-action@v2.1
         with:
           owner: 'atoopub'
-          repository: '_'
+          repository: 'xs_app'
           access-token: ${{ secrets.TOKEN }}
 
       #APK签名设置
@@ -31,7 +31,7 @@ jobs:
           encodedString: ${{ secrets.KEYSTORE_BASE64 }}
       - name: Create key.properties
         run: |
-          cd _
+          cd xs_app
           echo "storeFile=${{ steps.android_keystore.outputs.filePath }}" > android/key.properties
           echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
@@ -47,7 +47,7 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - run: cp _/pubspec.yaml pubspec.yaml
+      - run: cp xs_app/pubspec.yaml pubspec.yaml
       #设置Flutter
       - name: Flutter action
         uses: subosito/flutter-action@v2
@@ -58,18 +58,18 @@ jobs:
       #更新Flutter的packages
       - name: Restore packages
         run: |
-          cd _
+          cd xs_app
           flutter pub get
 
       #打包APK
       - name: Build APK
         run: |
-          cd _
+          cd xs_app
           flutter build apk --release --split-per-abi
       
       - name: Build APK
         run: |
-          cd _
+          cd xs_app
           flutter build apk --release
       
       #上传APK至Artifacts
@@ -78,10 +78,10 @@ jobs:
         with:
           name: android
           path: |
-            _/build/app/outputs/flutter-apk/app-release.apk
-            _/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
-            _/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-            _/build/app/outputs/flutter-apk/app-x86_64-release.apk
+            xs_app/build/app/outputs/flutter-apk/app-release.apk
+            xs_app/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+            xs_app/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            xs_app/build/app/outputs/flutter-apk/app-x86_64-release.apk
 
       #读取版本信息
       - name: Read version
@@ -105,10 +105,10 @@ jobs:
           prerelease: ${{ fromJson(steps.version.outputs.content).prerelease }}
           token: ${{ secrets.TOKEN }}
           files: |
-            _/build/app/outputs/flutter-apk/app-release.apk
-            _/build/app/outputs/flutter-apk/app-x86_64-release.apk
-            _/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-            _/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+            xs_app/build/app/outputs/flutter-apk/app-release.apk
+            xs_app/build/app/outputs/flutter-apk/app-x86_64-release.apk
+            xs_app/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            xs_app/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
       #完成
       - run: echo "🍏 This job's status is ${{ job.status }}."
 
@@ -126,10 +126,10 @@ jobs:
         uses: GuillaumeFalourd/clone-github-repo-action@v2.1
         with:
           owner: 'atoopub'
-          repository: '_'
+          repository: 'xs_app'
           access-token: ${{ secrets.TOKEN }}
 
-      - run: cp _/pubspec.yaml pubspec.yaml
+      - run: cp xs_app/pubspec.yaml pubspec.yaml
       #设置Flutter
       - name: Flutter action
         uses: subosito/flutter-action@v2
@@ -145,7 +145,7 @@ jobs:
       #更新Flutter的packages
       - name: Restore packages
         run: |
-          cd _
+          cd xs_app
           flutter pub get
 
       # 安装appdmg npm install -g appdmg
@@ -159,13 +159,13 @@ jobs:
       #打包iOS
       - name: Build IPA
         run: |
-          cd _
+          cd xs_app
           flutter build ios --release --no-codesign
       
       #创建未签名ipa
       - name: Create IPA
         run: |
-          cd _
+          cd xs_app
           mkdir build/ios/iphoneos/Payload
           cp -R build/ios/iphoneos/Runner.app build/ios/iphoneos/Payload/Runner.app
           cd build/ios/iphoneos/
@@ -178,12 +178,12 @@ jobs:
         with:
           name: ios
           path: |
-            _/build/ios/iphoneos/ios_no_sign.ipa
+            xs_app/build/ios/iphoneos/ios_no_sign.ipa
       
       # 打包MAC
       - name: Build MacOS
         run: |
-          cd _
+          cd xs_app
           flutter_distributor package --platform macos --targets dmg,zip --skip-clean
 
       # 上传MAC至Artifacts
@@ -192,8 +192,8 @@ jobs:
         with:
           name: mac
           path: |
-            _/dist/*/*.dmg
-            _/dist/*/*.zip
+            xs_app/dist/*/*.dmg
+            xs_app/dist/*/*.zip
 
       #读取版本信息
       - name: Read version
@@ -217,9 +217,9 @@ jobs:
           prerelease: ${{ fromJson(steps.version.outputs.content).prerelease }}
           token: ${{ secrets.TOKEN }}
           files: |
-            _/build/ios/iphoneos/ios_no_sign.ipa
-            _/dist/*/*.dmg
-            _/dist/*/*.zip
+            xs_app/build/ios/iphoneos/ios_no_sign.ipa
+            xs_app/dist/*/*.dmg
+            xs_app/dist/*/*.zip
       #完成
       - run: echo "🍏 This job's status is ${{ job.status }}."
 
@@ -237,10 +237,10 @@ jobs:
         uses: GuillaumeFalourd/clone-github-repo-action@v2.1
         with:
           owner: 'atoopub'
-          repository: '_'
+          repository: 'xs_app'
           access-token: ${{ secrets.TOKEN }}
 
-      - run: cp _/pubspec.yaml pubspec.yaml
+      - run: cp xs_app/pubspec.yaml pubspec.yaml
       # 设置Flutter环境
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -259,7 +259,7 @@ jobs:
       # 更新Flutter的packages
       - name: Restore Packages
         run: |
-          cd _
+          cd xs_app
           flutter pub get
       # 设置flutter_distributor环境
       - name: Install flutter_distributor
@@ -267,7 +267,7 @@ jobs:
       # build Linux ZIP\DMG
       - name: Build Linux
         run: |
-          cd _
+          cd xs_app
           flutter_distributor package --platform linux --targets deb,zip --skip-clean
       # 上传Linux包至Artifacts
       - name: Upload Linux APP to Artifacts
@@ -275,8 +275,8 @@ jobs:
         with:
           name: linux
           path: |
-            _/dist/*/*.deb
-            _/dist/*/*.zip
+            xs_app/dist/*/*.deb
+            xs_app/dist/*/*.zip
 
       # 读取版本信息
       - name: Read version
@@ -300,8 +300,8 @@ jobs:
           prerelease: ${{ fromJson(steps.version.outputs.content).prerelease }}
           token: ${{ secrets.TOKEN }}
           files: |
-            _/dist/*/*.deb
-            _/dist/*/*.zip
+            xs_app/dist/*/*.deb
+            xs_app/dist/*/*.zip
         #完成
       - run: echo "🍏 Linux job's status is ${{ job.status }}."
 
@@ -319,10 +319,10 @@ jobs:
         uses: GuillaumeFalourd/clone-github-repo-action@v2.1
         with:
           owner: 'atoopub'
-          repository: '_'
+          repository: 'xs_app'
           access-token: ${{ secrets.TOKEN }}
 
-      - run: copy _/pubspec.yaml pubspec.yaml
+      - run: copy xs_app/pubspec.yaml pubspec.yaml
       - run: choco install yq
       - name: Enable Git longpaths
         run: git config --system core.longpaths true
@@ -345,19 +345,19 @@ jobs:
         run: flutter config --enable-windows-desktop
       - name: Restore Packages
         run: |
-          cd _
+          cd xs_app
           flutter pub get
       # build Windows
       - name: Build Windows
         run: |
-          cd _
+          cd xs_app
           flutter build windows
-      - run: Compress-Archive _/build/windows/x64/runner/Release/* _/xs_windows.zip
+      - run: Compress-Archive xs_app/build/windows/x64/runner/Release/* xs_app/xs_windows.zip
 
       - name: Compile .ISS to .EXE Installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
         with:
-          path: _/windows/innosetup.iss
+          path: xs_app/windows/innosetup.iss
 
       # 上传Windows至Artifacts
       - name: Upload Windows APP to Artifacts
@@ -365,8 +365,8 @@ jobs:
         with:
           name: windows
           path: |
-            _/xs_windows.zip
-            _/xs_windows_installer.exe
+            xs_app/xs_windows.zip
+            xs_app/xs_windows_installer.exe
 
       # 读取版本信息
       - name: Read version
@@ -390,8 +390,8 @@ jobs:
           prerelease: ${{ fromJson(steps.version.outputs.content).prerelease }}
           token: ${{ secrets.TOKEN }}
           files: |
-            _/xs_windows.zip
-            _/xs_windows_installer.exe
+            xs_app/xs_windows.zip
+            xs_app/xs_windows_installer.exe
 
       #完成
       - run: echo "🍏 Windows job's status is ${{ job.status }}."
