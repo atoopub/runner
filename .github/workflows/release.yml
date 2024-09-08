@@ -311,8 +311,7 @@ jobs:
       
       - run: |
           cd _
-          rmdir /s/q ".github"
-          move * ../
+          move /y * ../
 
       - run: choco install yq
       - name: Enable Git longpaths
