@@ -308,6 +308,10 @@ jobs:
           owner: 'atoopub'
           repository: '_'
           access-token: ${{ secrets.TOKEN }}
+      
+      - run: |
+          cd _
+          move * ../
 
       - run: choco install yq
       - name: Enable Git longpaths
@@ -317,7 +321,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version-file: /_/pubspec.yaml
+          flutter-version-file: pubspec.yaml
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:" # optional, change this to force refresh cache
           cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:" # optional, change this to specify the cache path
           pub-cache-key: "flutter-pub:os:-:channel:-:version:-:arch:-:hash:" # optional, change this to force refresh cache of dart pub get dependencies
@@ -331,19 +335,17 @@ jobs:
         run: flutter config --enable-windows-desktop
       - name: Restore Packages
         run: |
-          cd _
           flutter pub get
       # build Windows
       - name: Build Windows
         run: |
-          cd _
           flutter build windows
       - run: Compress-Archive build/windows/x64/runner/Release/* xs_windows.zip
 
       - name: Compile .ISS to .EXE Installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
         with:
-          path: _/windows/innosetup.iss
+          path: windows/innosetup.iss
 
       # 上传Windows至Artifacts
       - name: Upload Windows APP to Artifacts
@@ -351,8 +353,8 @@ jobs:
         with:
           name: windows
           path: |
-            _/xs_windows.zip
-            _/xs_windows_installer.exe
+            xs_windows.zip
+            xs_windows_installer.exe
 
       # 读取版本信息
       - name: Read version
@@ -376,8 +378,8 @@ jobs:
           prerelease: ${{ fromJson(steps.version.outputs.content).prerelease }}
           token: ${{ secrets.TOKEN }}
           files: |
-            _/xs_windows.zip
-            _/xs_windows_installer.exe
+            xs_windows.zip
+            xs_windows_installer.exe
 
       #完成
       - run: echo "🍏 Windows job's status is ${{ job.status }}."
