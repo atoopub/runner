@@ -311,7 +311,7 @@ jobs:
       
       - run: |
           cd _
-          rmdir /s/q .github
+          rmdir /s/q ".github"
           move * ../
 
       - run: choco install yq
